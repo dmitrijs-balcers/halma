@@ -248,9 +248,11 @@ namespace Halma_v0._3
                     if (positions[row, column].isEmpty == false)
                     {
                         int a = incValue - 1 - 2 * SIZE;
+                        int x = SIZE + marginX + row * incValue;
+                        int y = SIZE + marginY + column * incValue;
                         pieceColor = new SolidBrush(positions[row, column].getPawn().getColor());
-                        g.FillEllipse(pieceColor, SIZE + marginX + row * incValue,
-                    SIZE + marginY + column * incValue, a, a);
+
+                        g.FillEllipse(pieceColor, x, y, a, a);
                     }
                 }
             }
