@@ -47,7 +47,7 @@ namespace Halma_v0._3
             int marginY;
             int incValue;
 
-            // Calculates the increments so that we can get a squared board develop
+            // Calculates the increments so that we can get a squared board develop develop
  
             if (d.Width < d.Height)
             {
