@@ -1,0 +1,380 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Threading;
+
+namespace Halma_v0._3
+{
+    class Board : Control
+    {
+        static Position[,] positions = new Position[16, 16];
+        private static bool isGeneratedStartPawnSet = false;
+        private static int playersCount = 4;
+        private Position tempPos;
+
+        // Upper left corner of the board
+        internal int startX;
+        internal int startY;
+
+        // Size of the boards squares
+        internal int cellWidth;
+
+        // Pieces size
+        private static int SIZE = 0;
+
+        private Position selectedPosition;
+
+        public void newGame(int Players)
+        {
+            clearBoard();
+            isGeneratedStartPawnSet = false;
+            playersCount = Players;
+        }
+
+        private void clearBoard()
+        {
+            positions = new Position[16, 16];
+        }
+
+        protected override void OnPaint(PaintEventArgs ev)
+        {
+            Graphics g = ev.Graphics;
+            Size d = ClientSize;
+            int marginX;
+            int marginY;
+            int incValue;
+
+            // Calculates the increments so that we can get a squared
+            // board
+
+            if (d.Width < d.Height)
+            {
+                marginX = 0;
+                marginY = (d.Height - d.Width) / 2;
+
+                incValue = d.Width / 16;
+            }
+            else
+            {
+                marginX = (d.Width - d.Height) / 2;
+                marginY = 0;
+
+                incValue = d.Height / 16;
+            }
+            startX = marginX;
+            startY = marginY;
+            cellWidth = incValue;
+
+            drawBoard(g, marginX, marginY, incValue);
+            if (isGeneratedStartPawnSet == false)
+            {
+                if (playersCount == 2)
+                    generateStartPawnSet2Players();
+                else
+                    generateStartPawnSet4Players();
+
+                isGeneratedStartPawnSet = true;
+            }
+            if (isGeneratedStartPawnSet == true && (playersCount == 2 || playersCount == 4))
+            {
+                drawPieces(g, marginX, marginY, incValue);
+                Thread.Sleep(100);
+            }
+            base.OnPaint(ev);
+        }
+
+        private bool isPositionsEqual(Position pos1, Position pos2)
+        {
+            if (pos1 != null && pos2 != null)
+            {
+                if (pos1.getX() == pos2.getX() && pos1.getY() == pos2.getY())
+                    return true;
+            }
+            return false;
+        }
+
+        private void drawBoard(Graphics g, int marginX, int marginY, int incValue)
+        {
+            int pos;
+            Brush cellColor;
+
+            for (int y = 0; y < 16; y++)
+                for (int x = 0; x < 16; x++)
+                {
+                    if ((x + y) % 2 == 0)
+                    {
+                        cellColor = new SolidBrush(Color.White);
+                        if (selectedPosition != null && isPositionsEqual(selectedPosition, positions[x, y]) && selectedPosition.isSelected == true)
+                            cellColor = new SolidBrush(Color.LightGreen);
+                    }
+                    else
+                    {
+                        pos = y * 4 + (x + ((y % 2 == 0) ? -1 : 0)) / 2;
+
+                        if (selectedPosition != null && isPositionsEqual(selectedPosition, positions[x, y]) && selectedPosition.isSelected == true)
+                            cellColor = new SolidBrush(Color.LightGreen);
+                        else
+                            cellColor = new SolidBrush(Color.Black);
+                    }
+                    if (isGeneratedStartPawnSet == false)
+                    {
+                        positions[x, y] = new Position();
+                    }
+
+                    g.FillRectangle(cellColor, marginX + x * incValue, marginY + y * incValue, incValue - 1, incValue - 1);
+                }
+        }
+
+        private void generateStartPawnSet4Players()
+        {
+            Player firstPlayer = new Player(13, 4, false); // up-left
+            Player secondPlayer = new Player(13, 12, false); // up-right
+            Player thirdPlayer = new Player(13, 2, false); // left-down
+            Player fourthPlayer = new Player(13, 14, false); // right-down
+
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    if (y <= 3)
+                    {
+                        if (firstPlayer.firstPawnXposition > x)
+                            addPawn(firstPlayer, y, x, Color.LightCoral);
+                        else if (secondPlayer.firstPawnXposition <= x)
+                            addPawn(secondPlayer, y, x, Color.Red);
+                    }
+                    else if (y >= 12)
+                    {
+                        if (thirdPlayer.firstPawnXposition > x)
+                            addPawn(thirdPlayer, y, x, Color.SteelBlue);
+                        else if(fourthPlayer.firstPawnXposition <= x) 
+                            addPawn(fourthPlayer, y, x, Color.Indigo);
+                    }
+                    positions[x, y].setX(x);
+                    positions[x, y].setY(y);
+                }
+                reduceFirstPawnXposition(firstPlayer, secondPlayer, thirdPlayer, fourthPlayer, y);
+            }
+        }
+
+        private static void addPawn(Player firstPlayer, int y, int x, Color color)
+        {
+            Pawn pawn = new Pawn();
+            pawn.setColor(color);
+            positions[x, y].setPawn(pawn);
+            firstPlayer.quantityOfPawns--;
+        }
+
+        private static void reduceFirstPawnXposition(Player firstPlayer, Player secondPlayer, Player thirdPlayer, Player fourthPlayer, int y)
+        {
+            if (!firstPlayer.isPawnsSetted && !secondPlayer.isPawnsSetted && y != 0)
+            {
+                firstPlayer.firstPawnXposition--;
+                secondPlayer.firstPawnXposition++;
+            }
+            else if (!thirdPlayer.isPawnsSetted && !fourthPlayer.isPawnsSetted && y >= 12 && y < 14)
+            {
+                thirdPlayer.firstPawnXposition++;
+                fourthPlayer.firstPawnXposition--;
+            }
+        }
+
+        private void generateStartPawnSet2Players()
+        {
+            int whiteX = 5;
+            int whiteCount = 19;
+            int blackX = 14;
+            int blackCount = 19;
+            bool isWhiteSetted = false;
+            for (int y = 0; y < 16; y++)
+            {
+
+                for (int x = 0; x < 16; x++)
+                {
+                    if (whiteX > x && y <= 4)
+                    {
+                        Pawn pawn = new Pawn();
+                        pawn.setColor(Color.LightCoral);
+                        positions[x, y].setPawn(pawn);
+                        whiteCount--;
+                        Console.Write(pawn.getColor());
+                    }
+
+                    else if (y >= 11 && x >= blackX)
+                    {
+                        Pawn pawn = new Pawn();
+                        pawn.setColor(Color.Indigo);
+                        positions[x, y].setPawn(pawn);
+                        blackCount--;
+                        Console.Write(pawn.getColor());
+                    }
+                    positions[x, y].setX(x);
+                    positions[x, y].setY(y);
+                }
+                Console.WriteLine();
+                if (whiteCount != 0)
+                {
+                    whiteX--;
+                    if (y == 0)
+                    {
+                        whiteX++;
+                    }
+                }
+                else
+                {
+                    isWhiteSetted = true;
+                }
+                if (isWhiteSetted && y >= 11)
+                {
+                    blackX--;
+                    if (y > 13)
+                    {
+                        blackX++;
+                    }
+                }
+            }
+        }
+
+        private void drawPieces(Graphics g, int marginX, int marginY, int incValue)
+        {
+            Brush pieceColor;
+            for (int column = 0; column < 16; column++)
+            {
+                for (int row = 0; row < 16; row++)
+                {
+                    if (positions[row, column].isEmpty == false)
+                    {
+                        int a = incValue - 1 - 2 * SIZE;
+                        pieceColor = new SolidBrush(positions[row, column].getPawn().getColor());
+                        g.FillEllipse(pieceColor, SIZE + marginX + row * incValue,
+                    SIZE + marginY + column * incValue, a, a);
+                    }
+                }
+            }
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            Position selectedPosition = getPiecePosition(e.X, e.Y);
+            if (isPositionsEqual(selectedPosition, tempPos))
+            {
+                deselectPawn();
+            }
+            else if (selectedPosition.isEmpty == false)
+            {
+                selectPawn(selectedPosition);
+            }
+            else if (selectedPosition.isEmpty == true && tempPos != null)
+            {
+                movePawnToEmptySpace(selectedPosition);
+            }
+        }
+
+        private void movePawnToEmptySpace(Position selectedPosition)
+        {
+            int distanceX; int distanceY;
+            setDiferencesXY(selectedPosition, out distanceX, out distanceY);
+
+            int radius = 1;
+            if (checkMoveAllowance(selectedPosition, distanceX, distanceY, radius))
+            {
+                movePawn(selectedPosition);
+            }
+            else
+            {
+                radius = 2;
+                if (checkMoveAllowance(selectedPosition, distanceX, distanceY, radius))
+                {
+                    if (checkForAdjacentPieces(selectedPosition, distanceX, distanceY))
+                    {
+                        movePawn(selectedPosition);
+                    }
+                }
+            }
+        }
+
+        private void movePawn(Position currPos)
+        {
+            currPos.setPawn(tempPos.getPawn()); // set pawn on position
+            deletePawn();
+        }
+
+        private void deletePawn()
+        {
+            foreach (Position position in positions)
+            {
+                if (tempPos != null && isPositionsEqual(position, tempPos)) // delete pawn
+                {
+                    position.isEmpty = true;
+                    deselectPawn();
+                }
+            }
+        }
+
+        private static bool checkForAdjacentPieces(Position selectedPosition, int distanceX, int distance)
+        {
+            return !positions[selectedPosition.getX() + ((distanceX != 0 ? (distanceX > 0 ? distanceX - 1 : distanceX + 1) : 0)),
+                                    selectedPosition.getY() + ((distance != 0 ? (distance > 0 ? distance - 1 : distance + 1) : 0))].isEmpty;
+        }
+
+        private bool checkMoveAllowance(Position selectedPosition, int distanceX, int distanceY, int radius)
+        {
+            return checkPosition(distanceX, distanceY, radius) && selectedPosition.isEmpty;
+        }
+
+        private void setDiferencesXY(Position currPos, out int differenceX, out int differenceY)
+        {
+            differenceX = tempPos.getX() - currPos.getX();
+            differenceY = tempPos.getY() - currPos.getY();
+        }
+
+        private void deselectPawn()
+        {
+            selectedPosition.isSelected = false;
+            tempPos = null;
+            Invalidate();
+            Update();
+        }
+
+        private bool checkPosition(int differenceX, int differenceY, int range)
+        {
+            int sqrX = differenceX * differenceX, sqrY = differenceY * differenceY, sqrRange = range * range;
+            return (sqrX == 0 || sqrX == sqrRange) && (sqrY == 0 || sqrY == sqrRange);
+        }
+
+        private void selectPawn(Position position)
+        {
+            tempPos = position;
+            selectedPosition = position;
+            selectedPosition.isSelected = true;
+            Invalidate();
+            Update();
+        }
+
+        private Position getPiecePosition(int currentX, int currentY)
+        {
+            Position response = null;
+            for (int column = 0; column <= 16; column++)
+            {
+                for (int row = 0; row <= 16; row++)
+                {
+                    if (SIZE + startX + row * cellWidth >= currentX
+                        && SIZE + startX + ((row > 0) ? row - 1 : row) * cellWidth <= currentX)
+                    {
+                        if (SIZE + startY + column * cellWidth >= currentY
+                            && SIZE + startY + ((column > 0) ? column - 1 : row) * cellWidth <= currentY)
+                        {
+                            Position position = positions[row - 1, column - 1];
+                            response = position;
+                            Console.WriteLine("Position X = " + position.getX() + " Position Y = " + position.getY());
+                        }
+                    }
+                }
+            }
+            return response;
+        }
+    }
+}

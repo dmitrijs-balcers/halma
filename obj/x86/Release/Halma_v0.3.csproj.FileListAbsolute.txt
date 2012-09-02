@@ -1,0 +1,9 @@
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0._3.Form1.resources
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0._3.Properties.Resources.resources
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\GenerateResource.write.1.tlog
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\bin\Release\Halma_v0.3.exe
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\bin\Release\Halma_v0.3.pdb
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.exe
+C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.pdb
