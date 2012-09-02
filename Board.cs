@@ -15,7 +15,7 @@ namespace Halma_v0._3
         private static int playersCount = 4;
         private Position tempPos;
 
-        // Upper left corner of the board 
+        // Upper left corner of the board  
         internal int startX;
         internal int startY;
 
