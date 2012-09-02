@@ -130,10 +130,10 @@ namespace Halma_v0._3
 
         private void generateStartPawnSet4Players()
         {
-            Player firstPlayer = new Player(13, 4, false); // up-left
-            Player secondPlayer = new Player(13, 12, false); // up-right
-            Player thirdPlayer = new Player(13, 2, false); // left-down
-            Player fourthPlayer = new Player(13, 14, false); // right-down
+            Player firstPlayer = new Player(13, 4, false, Color.LightCoral); // up-left
+            Player secondPlayer = new Player(13, 12, false, Color.Red); // up-right
+            Player thirdPlayer = new Player(13, 2, false, Color.SteelBlue); // left-down
+            Player fourthPlayer = new Player(13, 14, false, Color.Indigo); // right-down
 
             for (int y = 0; y < 16; y++)
             {
@@ -142,16 +142,16 @@ namespace Halma_v0._3
                     if (y <= 3)
                     {
                         if (firstPlayer.firstPawnXposition > x)
-                            addPawn(firstPlayer, y, x, Color.LightCoral);
+                            addPawn(firstPlayer, y, x);
                         else if (secondPlayer.firstPawnXposition <= x)
-                            addPawn(secondPlayer, y, x, Color.Red);
+                            addPawn(secondPlayer, y, x);
                     }
                     else if (y >= 12)
                     {
                         if (thirdPlayer.firstPawnXposition > x)
-                            addPawn(thirdPlayer, y, x, Color.SteelBlue);
+                            addPawn(thirdPlayer, y, x);
                         else if(fourthPlayer.firstPawnXposition <= x) 
-                            addPawn(fourthPlayer, y, x, Color.Indigo);
+                            addPawn(fourthPlayer, y, x);
                     }
                     positions[x, y].setX(x);
                     positions[x, y].setY(y);
@@ -160,10 +160,10 @@ namespace Halma_v0._3
             }
         }
 
-        private static void addPawn(Player firstPlayer, int y, int x, Color color)
+        private static void addPawn(Player firstPlayer, int y, int x)
         {
             Pawn pawn = new Pawn();
-            pawn.setColor(color);
+            pawn.setColor(firstPlayer.color);
             positions[x, y].setPawn(pawn);
             firstPlayer.quantityOfPawns--;
         }
@@ -196,8 +196,8 @@ namespace Halma_v0._3
 
         private void generateStartPawnSet2Players()
         {
-            Player firstPlayer = new Player(19, 5, false); // up-left
-            Player secondPlayer = new Player(19, 14, false); // right-down
+            Player firstPlayer = new Player(19, 5, false, Color.LightCoral); // up-left
+            Player secondPlayer = new Player(19, 14, false, Color.Indigo); // right-down
 
             for (int y = 0; y < 16; y++)
             {
@@ -206,12 +206,12 @@ namespace Halma_v0._3
                     if (y <= 4)
                     {
                         if (firstPlayer.firstPawnXposition > x)
-                            addPawn(firstPlayer, y, x, Color.LightCoral);
+                            addPawn(firstPlayer, y, x);
                     }
                     else if (y >= 11)
                     {
                         if (secondPlayer.firstPawnXposition <= x)
-                            addPawn(secondPlayer, y, x, Color.Indigo);
+                            addPawn(secondPlayer, y, x);
                     }
                     positions[x, y].setX(x);
                     positions[x, y].setY(y);

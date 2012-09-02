@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace Halma_v0._3
 {
@@ -31,10 +32,18 @@ namespace Halma_v0._3
             set { m_isPawnsSetted = value; }
         }
 
-        public Player(int quantityOfPawns, int firstPawnXposition, bool isPawnsSetted) {
+        public Color m_color;
+        public Color color
+        {
+            get { return m_color; }
+            set { m_color = value; }
+        }
+
+        public Player(int quantityOfPawns, int firstPawnXposition, bool isPawnsSetted, Color color) {
             this.quantityOfPawns = quantityOfPawns;
             this.firstPawnXposition = firstPawnXposition;
             this.isPawnsSetted = isPawnsSetted;
+            this.color = color;
         }
     }
 }
