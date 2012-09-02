@@ -182,59 +182,41 @@ namespace Halma_v0._3
             }
         }
 
+        private static void reduceFirstPawnXposition(Player firstPlayer, Player secondPlayer, int y)
+        {
+            if (!firstPlayer.isPawnsSetted && y != 0)
+            {
+                firstPlayer.firstPawnXposition--;
+            }
+            else if (!secondPlayer.isPawnsSetted && y >= 11 && y < 14)
+            {
+                secondPlayer.firstPawnXposition--;
+            }
+        }
+
         private void generateStartPawnSet2Players()
         {
-            int whiteX = 5;
-            int whiteCount = 19;
-            int blackX = 14;
-            int blackCount = 19;
-            bool isWhiteSetted = false;
+            Player firstPlayer = new Player(19, 5, false); // up-left
+            Player secondPlayer = new Player(19, 14, false); // right-down
+
             for (int y = 0; y < 16; y++)
             {
-
                 for (int x = 0; x < 16; x++)
                 {
-                    if (whiteX > x && y <= 4)
+                    if (y <= 4)
                     {
-                        Pawn pawn = new Pawn();
-                        pawn.setColor(Color.LightCoral);
-                        positions[x, y].setPawn(pawn);
-                        whiteCount--;
-                        Console.Write(pawn.getColor());
+                        if (firstPlayer.firstPawnXposition > x)
+                            addPawn(firstPlayer, y, x, Color.LightCoral);
                     }
-
-                    else if (y >= 11 && x >= blackX)
+                    else if (y >= 11)
                     {
-                        Pawn pawn = new Pawn();
-                        pawn.setColor(Color.Indigo);
-                        positions[x, y].setPawn(pawn);
-                        blackCount--;
-                        Console.Write(pawn.getColor());
+                        if (secondPlayer.firstPawnXposition <= x)
+                            addPawn(secondPlayer, y, x, Color.Indigo);
                     }
                     positions[x, y].setX(x);
                     positions[x, y].setY(y);
                 }
-                Console.WriteLine();
-                if (whiteCount != 0)
-                {
-                    whiteX--;
-                    if (y == 0)
-                    {
-                        whiteX++;
-                    }
-                }
-                else
-                {
-                    isWhiteSetted = true;
-                }
-                if (isWhiteSetted && y >= 11)
-                {
-                    blackX--;
-                    if (y > 13)
-                    {
-                        blackX++;
-                    }
-                }
+                reduceFirstPawnXposition(firstPlayer, secondPlayer, y);
             }
         }
 
