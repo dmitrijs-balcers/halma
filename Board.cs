@@ -47,8 +47,7 @@ namespace Halma_v0._3
             int marginY;
             int incValue;
 
-            // Calculates the increments so that we can get a squared
-            // board
+            // Calculates the increments so that we can get a squared board
 
             if (d.Width < d.Height)
             {
@@ -86,46 +85,42 @@ namespace Halma_v0._3
             base.OnPaint(ev);
         }
 
-        private bool isPositionsEqual(Position pos1, Position pos2)
-        {
-            if (pos1 != null && pos2 != null)
-            {
-                if (pos1.getX() == pos2.getX() && pos1.getY() == pos2.getY())
-                    return true;
-            }
-            return false;
-        }
-
         private void drawBoard(Graphics g, int marginX, int marginY, int incValue)
         {
-            int pos;
-            Brush cellColor;
+            int a = incValue - 1;
 
             for (int y = 0; y < 16; y++)
                 for (int x = 0; x < 16; x++)
                 {
-                    if ((x + y) % 2 == 0)
-                    {
-                        cellColor = new SolidBrush(Color.White);
-                        if (selectedPosition != null && isPositionsEqual(selectedPosition, positions[x, y]) && selectedPosition.isSelected == true)
-                            cellColor = new SolidBrush(Color.LightGreen);
-                    }
-                    else
-                    {
-                        pos = y * 4 + (x + ((y % 2 == 0) ? -1 : 0)) / 2;
-
-                        if (selectedPosition != null && isPositionsEqual(selectedPosition, positions[x, y]) && selectedPosition.isSelected == true)
-                            cellColor = new SolidBrush(Color.LightGreen);
-                        else
-                            cellColor = new SolidBrush(Color.Black);
-                    }
-                    if (isGeneratedStartPawnSet == false)
-                    {
-                        positions[x, y] = new Position();
-                    }
-
-                    g.FillRectangle(cellColor, marginX + x * incValue, marginY + y * incValue, incValue - 1, incValue - 1);
+                    drawCell(g, marginX, marginY, incValue, a, y, x);
                 }
+        }
+
+        private void drawCell(Graphics g, int marginX, int marginY, int incValue, int a, int y, int x)
+        {
+            Brush cellColor;
+            if (isPositionEven(y, x))
+                cellColor = new SolidBrush(Color.White);
+            else
+                cellColor = new SolidBrush(Color.Black);
+
+            if (validateSelectedPosition(y, x))
+                cellColor = new SolidBrush(Color.LightGreen);
+
+            if (isGeneratedStartPawnSet == false)
+                positions[x, y] = new Position();
+
+            g.FillRectangle(cellColor, marginX + x * incValue, marginY + y * incValue, a, a);
+        }
+
+        private static bool isPositionEven(int y, int x)
+        {
+            return (x + y) % 2 == 0;
+        }
+
+        private bool validateSelectedPosition(int y, int x)
+        {
+            return selectedPosition != null && isPositionsEqual(selectedPosition, positions[x, y]) && selectedPosition.isSelected == true;
         }
 
         private void generateStartPawnSet4Players()
@@ -153,44 +148,9 @@ namespace Halma_v0._3
                         else if(fourthPlayer.firstPawnXposition <= x) 
                             addPawn(fourthPlayer, y, x);
                     }
-                    positions[x, y].setX(x);
-                    positions[x, y].setY(y);
+                    positions[x, y].setPosition(x, y);
                 }
-                reduceFirstPawnXposition(firstPlayer, secondPlayer, thirdPlayer, fourthPlayer, y);
-            }
-        }
-
-        private static void addPawn(Player firstPlayer, int y, int x)
-        {
-            Pawn pawn = new Pawn();
-            pawn.setColor(firstPlayer.color);
-            positions[x, y].setPawn(pawn);
-            firstPlayer.quantityOfPawns--;
-        }
-
-        private static void reduceFirstPawnXposition(Player firstPlayer, Player secondPlayer, Player thirdPlayer, Player fourthPlayer, int y)
-        {
-            if (!firstPlayer.isPawnsSetted && !secondPlayer.isPawnsSetted && y != 0)
-            {
-                firstPlayer.firstPawnXposition--;
-                secondPlayer.firstPawnXposition++;
-            }
-            else if (!thirdPlayer.isPawnsSetted && !fourthPlayer.isPawnsSetted && y >= 12 && y < 14)
-            {
-                thirdPlayer.firstPawnXposition++;
-                fourthPlayer.firstPawnXposition--;
-            }
-        }
-
-        private static void reduceFirstPawnXposition(Player firstPlayer, Player secondPlayer, int y)
-        {
-            if (!firstPlayer.isPawnsSetted && y != 0)
-            {
-                firstPlayer.firstPawnXposition--;
-            }
-            else if (!secondPlayer.isPawnsSetted && y >= 11 && y < 14)
-            {
-                secondPlayer.firstPawnXposition--;
+                changeFirstPawnXposition(firstPlayer, secondPlayer, thirdPlayer, fourthPlayer, y);
             }
         }
 
@@ -213,10 +173,43 @@ namespace Halma_v0._3
                         if (secondPlayer.firstPawnXposition <= x)
                             addPawn(secondPlayer, y, x);
                     }
-                    positions[x, y].setX(x);
-                    positions[x, y].setY(y);
+                    positions[x, y].setPosition(x, y); ;
                 }
-                reduceFirstPawnXposition(firstPlayer, secondPlayer, y);
+                changeFirstPawnXposition(firstPlayer, secondPlayer, y);
+            }
+        }
+
+        private static void addPawn(Player firstPlayer, int y, int x)
+        {
+            Pawn pawn = new Pawn();
+            pawn.setColor(firstPlayer.color);
+            positions[x, y].setPawn(pawn);
+            firstPlayer.quantityOfPawns--;
+        }
+
+        private static void changeFirstPawnXposition(Player firstPlayer, Player secondPlayer, Player thirdPlayer, Player fourthPlayer, int y)
+        {
+            if (!firstPlayer.isPawnsSetted && !secondPlayer.isPawnsSetted && y != 0)
+            {
+                firstPlayer.firstPawnXposition--;
+                secondPlayer.firstPawnXposition++;
+            }
+            else if (!thirdPlayer.isPawnsSetted && !fourthPlayer.isPawnsSetted && y >= 12 && y < 14)
+            {
+                thirdPlayer.firstPawnXposition++;
+                fourthPlayer.firstPawnXposition--;
+            }
+        }
+
+        private static void changeFirstPawnXposition(Player firstPlayer, Player secondPlayer, int y)
+        {
+            if (!firstPlayer.isPawnsSetted && y != 0)
+            {
+                firstPlayer.firstPawnXposition--;
+            }
+            else if (!secondPlayer.isPawnsSetted && y >= 11 && y < 14)
+            {
+                secondPlayer.firstPawnXposition--;
             }
         }
 
@@ -233,7 +226,6 @@ namespace Halma_v0._3
                         int x = SIZE + marginX + row * incValue;
                         int y = SIZE + marginY + column * incValue;
                         pieceColor = new SolidBrush(positions[row, column].getPawn().getColor());
-
                         g.FillEllipse(pieceColor, x, y, a, a);
                     }
                 }
@@ -244,17 +236,21 @@ namespace Halma_v0._3
         {
             Position selectedPosition = getPiecePosition(e.X, e.Y);
             if (isPositionsEqual(selectedPosition, tempPos))
-            {
                 deselectPawn();
-            }
             else if (selectedPosition.isEmpty == false)
-            {
                 selectPawn(selectedPosition);
-            }
             else if (selectedPosition.isEmpty == true && tempPos != null)
-            {
                 movePawnToEmptySpace(selectedPosition);
+        }
+
+        private bool isPositionsEqual(Position pos1, Position pos2)
+        {
+            if (pos1 != null && pos2 != null)
+            {
+                if (pos1.getX() == pos2.getX() && pos1.getY() == pos2.getY())
+                    return true;
             }
+            return false;
         }
 
         private void movePawnToEmptySpace(Position selectedPosition)
@@ -262,22 +258,24 @@ namespace Halma_v0._3
             int distanceX; int distanceY;
             setDiferencesXY(selectedPosition, out distanceX, out distanceY);
 
-            int radius = 1;
-            if (checkMoveAllowance(selectedPosition, distanceX, distanceY, radius))
-            {
+            if (isMoveAllowed(selectedPosition, distanceX, distanceY))
                 movePawn(selectedPosition);
-            }
-            else
-            {
-                radius = 2;
-                if (checkMoveAllowance(selectedPosition, distanceX, distanceY, radius))
-                {
-                    if (checkForAdjacentPieces(selectedPosition, distanceX, distanceY))
-                    {
-                        movePawn(selectedPosition);
-                    }
-                }
-            }
+        }
+
+        private void setDiferencesXY(Position currPos, out int differenceX, out int differenceY)
+        {
+            differenceX = tempPos.getX() - currPos.getX();
+            differenceY = tempPos.getY() - currPos.getY();
+        }
+        
+        private bool isMoveAllowed(Position selectedPosition, int distanceX, int distanceY)
+        {
+            return checkMoveAllowance(selectedPosition, distanceX, distanceY, 1) || (checkMoveAllowance(selectedPosition, distanceX, distanceY, 2) && checkForNearbyPieces(selectedPosition, distanceX, distanceY));
+        }
+
+        private bool checkMoveAllowance(Position selectedPosition, int distanceX, int distanceY, int radius)
+        {
+            return checkPosition(distanceX, distanceY, radius) && selectedPosition.isEmpty;
         }
 
         private void movePawn(Position currPos)
@@ -290,7 +288,7 @@ namespace Halma_v0._3
         {
             foreach (Position position in positions)
             {
-                if (tempPos != null && isPositionsEqual(position, tempPos)) // delete pawn
+                if (tempPos != null && isPositionsEqual(position, tempPos))
                 {
                     position.isEmpty = true;
                     deselectPawn();
@@ -298,21 +296,10 @@ namespace Halma_v0._3
             }
         }
 
-        private static bool checkForAdjacentPieces(Position selectedPosition, int distanceX, int distance)
+        private static bool checkForNearbyPieces(Position selectedPosition, int distanceX, int distance)
         {
             return !positions[selectedPosition.getX() + ((distanceX != 0 ? (distanceX > 0 ? distanceX - 1 : distanceX + 1) : 0)),
                                     selectedPosition.getY() + ((distance != 0 ? (distance > 0 ? distance - 1 : distance + 1) : 0))].isEmpty;
-        }
-
-        private bool checkMoveAllowance(Position selectedPosition, int distanceX, int distanceY, int radius)
-        {
-            return checkPosition(distanceX, distanceY, radius) && selectedPosition.isEmpty;
-        }
-
-        private void setDiferencesXY(Position currPos, out int differenceX, out int differenceY)
-        {
-            differenceX = tempPos.getX() - currPos.getX();
-            differenceY = tempPos.getY() - currPos.getY();
         }
 
         private void deselectPawn()
