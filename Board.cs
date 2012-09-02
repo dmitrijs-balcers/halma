@@ -47,7 +47,7 @@ namespace Halma_v0._3
             int marginY;
             int incValue;
 
-            // Calculates the increments so that we can get a squared board topic8
+            // Calculates the increments so that we can get a squared board topic8real
  
             if (d.Width < d.Height)
             {
