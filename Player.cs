@@ -26,7 +26,7 @@ namespace Halma_v0._3
         public int firstPawnXposition;
 
         private bool m_isPawnsSetted;
-        public bool isPawnsSetted
+        public bool isPawnsSetted // 123
         {
             get { return m_isPawnsSetted; }
             set { m_isPawnsSetted = value; }
