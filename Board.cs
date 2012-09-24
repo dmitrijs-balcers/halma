@@ -20,7 +20,7 @@ namespace Halma_v0._3
         internal int startY;
 
         // Size of the boards squares
-        internal int cellWidth;
+        internal int cellWidth;   
 
         // Pieces size
         private static int SIZE = 0;
