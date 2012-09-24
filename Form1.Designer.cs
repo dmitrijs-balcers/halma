@@ -32,7 +32,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(525, 421);
             this.Name = "Halma";
-            this.Text = "Halma";
+            this.Text = "Halma";    // sadqwdqws
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.ResumeLayout(false);
         }
