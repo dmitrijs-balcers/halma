@@ -15,7 +15,7 @@ namespace Halma_v0._3
         }
         public Color getColor()
         {
-            return this.color;
+            return this.color;    //1
         }
     }
 }
