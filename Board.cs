@@ -245,10 +245,10 @@ namespace Halma_v0._3
             Position selectedPosition = getPiecePosition(e.X, e.Y);
             if (isPositionsEqual(selectedPosition, tempPos))
                 deselectPawn();
-            else if (checkPlayerTurn(selectedPosition) && selectedPosition.isEmpty == false)
-                selectPawn(selectedPosition);
             else if (selectedPosition.isEmpty == true && tempPos != null)
                 movePawnToEmptySpace(selectedPosition);
+            else if (selectedPosition.isEmpty == false && checkPlayerTurn(selectedPosition))
+                selectPawn(selectedPosition);
         }
 
         private bool isPositionsEqual(Position pos1, Position pos2)
@@ -266,7 +266,10 @@ namespace Halma_v0._3
             if (!pos.isEmpty && pos.getPawn().getColor().Equals(players[playerNrAllowedToMove].color))
                 return true;
             else
+            {
+                MessageBox.Show("It's "+ (players[playerNrAllowedToMove].color.Name) + " Player move!");
                 return false;
+            }
         }
 
         private void movePawnToEmptySpace(Position selectedPosition)

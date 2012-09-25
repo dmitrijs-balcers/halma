@@ -7,3 +7,11 @@ C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.
 C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\bin\Release\Halma_v0.3.pdb
 C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.exe
 C:\Users\Import\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.pdb
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.exe
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.pdb
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\bin\Release\Halma_v0.3.exe
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\bin\Release\Halma_v0.3.pdb
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0._3.Form1.resources
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0._3.NewGameForm.resources
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0._3.Properties.Resources.resources
+C:\Users\GigurdA\Dropbox\Programmesana\C#\2 kurss\Majasd_izp\Halma_v0.3\Halma_v0.3\obj\x86\Release\Halma_v0.3.csproj.GenerateResource.Cache
