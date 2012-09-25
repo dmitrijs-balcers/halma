@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
+using System.Collections;
 
 namespace Halma_v0._3
 {
@@ -14,6 +15,9 @@ namespace Halma_v0._3
         private static bool isGeneratedStartPawnSet = false;
         private static int playersCount = 4;
         private Position tempPos;
+
+        static List<Player> players = new List<Player>();
+        static int playerNrAllowedToMove;
 
         // Upper left corner of the board  
         internal int startX;
@@ -125,10 +129,12 @@ namespace Halma_v0._3
 
         private void generateStartPawnSet4Players()
         {
-            Player firstPlayer = new Player(13, 4, false, Color.LightCoral); // up-left
-            Player secondPlayer = new Player(13, 12, false, Color.Red); // up-right
-            Player thirdPlayer = new Player(13, 2, false, Color.SteelBlue); // left-down
-            Player fourthPlayer = new Player(13, 14, false, Color.Indigo); // right-down
+            players.Clear();
+            playerNrAllowedToMove = 0;
+            players.Add(new Player(13, 4, false, Color.LightCoral));
+            players.Add(new Player(13, 12, false, Color.Red));
+            players.Add(new Player(13, 2, false, Color.SteelBlue));
+            players.Add(new Player(13, 14, false, Color.Indigo));
 
             for (int y = 0; y < 16; y++)
             {
@@ -136,28 +142,30 @@ namespace Halma_v0._3
                 {
                     if (y <= 3)
                     {
-                        if (firstPlayer.firstPawnXposition > x)
-                            addPawn(firstPlayer, y, x);
-                        else if (secondPlayer.firstPawnXposition <= x)
-                            addPawn(secondPlayer, y, x);
+                        if (players[0].firstPawnXposition > x)
+                            addPawn(players[0], y, x);
+                        else if (players[1].firstPawnXposition <= x)
+                            addPawn(players[1], y, x);
                     }
                     else if (y >= 12)
                     {
-                        if (thirdPlayer.firstPawnXposition > x)
-                            addPawn(thirdPlayer, y, x);
-                        else if(fourthPlayer.firstPawnXposition <= x) 
-                            addPawn(fourthPlayer, y, x);
+                        if (players[2].firstPawnXposition > x)
+                            addPawn(players[2], y, x);
+                        else if(players[3].firstPawnXposition <= x) 
+                            addPawn(players[3], y, x);
                     }
                     positions[x, y].setPosition(x, y);
                 }
-                changeFirstPawnXposition(firstPlayer, secondPlayer, thirdPlayer, fourthPlayer, y);
+                changeFirstPawnXposition(players[0], players[1], players[2], players[3], y);
             }
         }
 
         private void generateStartPawnSet2Players()
         {
-            Player firstPlayer = new Player(19, 5, false, Color.LightCoral); // up-left
-            Player secondPlayer = new Player(19, 14, false, Color.Indigo); // right-down
+            players.Clear();
+            playerNrAllowedToMove = 0;
+            players.Add(new Player(19, 5, false, Color.LightCoral));
+            players.Add(new Player(19, 14, false, Color.Indigo));
 
             for (int y = 0; y < 16; y++)
             {
@@ -165,17 +173,17 @@ namespace Halma_v0._3
                 {
                     if (y <= 4)
                     {
-                        if (firstPlayer.firstPawnXposition > x)
-                            addPawn(firstPlayer, y, x);
+                        if (players[0].firstPawnXposition > x)
+                            addPawn(players[0], y, x);
                     }
                     else if (y >= 11)
                     {
-                        if (secondPlayer.firstPawnXposition <= x)
-                            addPawn(secondPlayer, y, x);
+                        if (players[1].firstPawnXposition <= x)
+                            addPawn(players[1], y, x);
                     }
                     positions[x, y].setPosition(x, y); ;
                 }
-                changeFirstPawnXposition(firstPlayer, secondPlayer, y);
+                changeFirstPawnXposition(players[0], players[1], y);
             }
         }
 
@@ -237,7 +245,7 @@ namespace Halma_v0._3
             Position selectedPosition = getPiecePosition(e.X, e.Y);
             if (isPositionsEqual(selectedPosition, tempPos))
                 deselectPawn();
-            else if (selectedPosition.isEmpty == false)
+            else if (checkPlayerTurn(selectedPosition) && selectedPosition.isEmpty == false)
                 selectPawn(selectedPosition);
             else if (selectedPosition.isEmpty == true && tempPos != null)
                 movePawnToEmptySpace(selectedPosition);
@@ -253,13 +261,32 @@ namespace Halma_v0._3
             return false;
         }
 
+        private bool checkPlayerTurn(Position pos)
+        {
+            if (!pos.isEmpty && pos.getPawn().getColor().Equals(players[playerNrAllowedToMove].color))
+                return true;
+            else
+                return false;
+        }
+
         private void movePawnToEmptySpace(Position selectedPosition)
         {
             int distanceX; int distanceY;
             setDiferencesXY(selectedPosition, out distanceX, out distanceY);
 
             if (isMoveAllowed(selectedPosition, distanceX, distanceY))
+            {
                 movePawn(selectedPosition);
+                nextPlayerTurn();
+            }
+        }
+
+        private void nextPlayerTurn()
+        {
+            if (playerNrAllowedToMove < players.Count -1)
+                playerNrAllowedToMove++;
+            else
+                playerNrAllowedToMove = 0;
         }
 
         private void setDiferencesXY(Position currPos, out int differenceX, out int differenceY)
@@ -267,11 +294,13 @@ namespace Halma_v0._3
             differenceX = tempPos.getX() - currPos.getX();
             differenceY = tempPos.getY() - currPos.getY();
         }
-        
+
         private bool isMoveAllowed(Position selectedPosition, int distanceX, int distanceY)
         {
             return checkMoveAllowance(selectedPosition, distanceX, distanceY, 1) || (checkMoveAllowance(selectedPosition, distanceX, distanceY, 2) && checkForNearbyPieces(selectedPosition, distanceX, distanceY));
         }
+
+
 
         private bool checkMoveAllowance(Position selectedPosition, int distanceX, int distanceY, int radius)
         {

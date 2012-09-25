@@ -18,13 +18,13 @@ namespace Halma_v0._3
         private Board m_view;
         public Form1()
         {
-            Text = "Halma v0.3";
+            Text = "Halma";
             ClientSize = new Size(600, 600);
             MainMenu menu = new MainMenu();
             MenuItem item = new MenuItem("&File");
             menu.MenuItems.Add(item);
-            item.MenuItems.Add(new MenuItem("&Jauna Spēle", new EventHandler(OnNewGame)));
-            item.MenuItems.Add(new MenuItem("&Iziet", new EventHandler(OnExit)));
+            menu.MenuItems.Add(new MenuItem("&New game", new EventHandler(OnNewGame)));
+            menu.MenuItems.Add(new MenuItem("&Quit", new EventHandler(OnExit)));
             Menu = menu;
 
             m_view = new Board();
